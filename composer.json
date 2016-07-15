@@ -1,0 +1,25 @@
+{
+    "name": "phlib/path",
+    "description": "PHP path handling component for dealing with escaped directory separators",
+    "authors": [
+        {
+            "name": "Martin Price",
+            "email": "martin.price@emailcenteruk.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Phlib\\": "src"
+        }
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "4.7.*"
+    },
+
+    "autoload-dev": {
+        "psr-4": {
+            "Phlib\\Path\\Test\\": "tests"
+        }
+    }
+}
