@@ -147,7 +147,9 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
     public function __construct($parts, $directorySeparator = DIRECTORY_SEPARATOR)
     {
         // trim last element if empty
-        if (empty($parts[count($parts) - 1])) {
+        if (empty($parts[count($parts) - 1]) &&
+            !(count($parts) === 2 && empty($parts[0])) // don't trim for single separator '/'
+        ) {
             array_pop($parts);
         }
         $this->directorySeparator = $directorySeparator;
@@ -241,6 +243,13 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         }
         $this->info  = [];
         $parts       = $this->parts;
+        if (empty($parts)) {
+            $this->info = [
+                self::INFO_BASENAME => '',
+                self::INFO_FILENAME => '',
+            ];
+            return;
+        }
         $basename    = array_pop($parts);
 
         $this->info[self::INFO_BASENAME] = $basename;
