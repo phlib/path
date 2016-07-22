@@ -241,6 +241,13 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         }
         $this->info  = [];
         $parts       = $this->parts;
+        if (empty($parts)) {
+            $this->info = [
+                self::INFO_BASENAME => '',
+                self::INFO_FILENAME => '',
+            ];
+            return;
+        }
         $basename    = array_pop($parts);
 
         $this->info[self::INFO_BASENAME] = $basename;

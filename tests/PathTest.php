@@ -37,6 +37,7 @@ class PathTest extends \PHPUnit_Framework_TestCase
             ['foo/bar.baz'],
             ['/foo.baz'],
             ['/foo/bar.baz'],
+            [''],
         ];
     }
 
