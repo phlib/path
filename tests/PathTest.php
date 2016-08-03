@@ -107,6 +107,20 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $this->assertPathInfoEquals($expected, $actual);
     }
 
+    public function testPathInfoMultipleOptionsNotAllPresent()
+    {
+        $path = '';
+        $phlibPath = Path::fromString($path);
+
+        $expected = [
+            'filename' => pathinfo($path, PATHINFO_FILENAME),
+        ];
+        $actual = $phlibPath->info(Path::INFO_FILENAME | Path::INFO_EXTENSION);
+
+        $this->assertInternalType('array', $actual);
+        $this->assertPathInfoEquals($expected, $actual);
+    }
+
     public function testCountable()
     {
         $phlibPath = Path::fromString('foo/bar/baz.taz');

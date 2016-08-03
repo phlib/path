@@ -225,7 +225,8 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
                 $info[$keyName] = $this->info[$key];
             }
         }
-        if (count($info) === 1) {
+        if (($options & ($options - 1)) === 0) {
+            // is a power of two, i.e. a single info option was specified
             return current($info);
         }
         return $info;
