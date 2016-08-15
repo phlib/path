@@ -146,12 +146,8 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __construct($parts, $directorySeparator = DIRECTORY_SEPARATOR)
     {
-        // trim last element if empty
-        if (empty($parts[count($parts) - 1]) &&
-            !(count($parts) === 2 && empty($parts[0])) // don't trim for single separator '/'
-        ) {
-            array_pop($parts);
-        }
+        $parts = $this->trimEmptyParts($parts);
+
         $this->directorySeparator = $directorySeparator;
         $this->parts              = $parts;
     }
@@ -281,6 +277,36 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         return array_map(function($name) {
             return self::escapeName($name);
         }, $parts);
+    }
+
+    /**
+     * Trims the empty elements from the parts array
+     *
+     * This has special behaviour to deal with empty paths, and paths which contain only a separator
+     *
+     * @param array $parts
+     * @return array
+     */
+    private function trimEmptyParts($parts)
+    {
+        $emptyLeading = empty($parts[0]);
+
+        if (count($parts) === 1 && $emptyLeading) {
+            // empty path (e.g. '')
+            return [];
+        }
+
+        return array_filter($parts, function($part, $index) use ($emptyLeading) {
+            if ($index === 0) {
+                // never trim first element to keep leading separators (e.g. '/foo')
+                return true;
+            }
+            if ($index === 1 && $emptyLeading) {
+                // never trim second element if first was empty (e.g. '/')
+                return true;
+            }
+            return !empty($part);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     /**
