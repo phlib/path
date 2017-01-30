@@ -1,6 +1,7 @@
 # phlib/path
 
 [![Build Status](https://img.shields.io/travis/phlib/path/master.svg?style=flat-square)](https://travis-ci.org/phlib/path)
+[![Codecov](https://img.shields.io/codecov/c/github/phlib/path.svg)](https://codecov.io/gh/phlib/path)
 [![Latest Stable Version](https://img.shields.io/packagist/v/phlib/path.svg?style=flat-square)](https://packagist.org/packages/phlib/path)
 [![Total Downloads](https://img.shields.io/packagist/dt/phlib/path.svg?style=flat-square)](https://packagist.org/packages/phlib/path)
 
