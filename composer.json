@@ -1,6 +1,7 @@
 {
     "name": "phlib/path",
     "description": "PHP path handling component for dealing with escaped directory separators",
+    "license": "LGPL-3.0",
     "authors": [
         {
             "name": "Martin Price",
