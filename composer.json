@@ -28,7 +28,7 @@
 
     "autoload-dev": {
         "psr-4": {
-            "Phlib\\Path\\Test\\": "tests"
+            "Phlib\\": "tests"
         }
     }
 }
