@@ -2,6 +2,10 @@
 
 namespace Phlib;
 
+/**
+ * @package Phlib\Path
+ * @license LGPL-3.0
+ */
 class Path implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
