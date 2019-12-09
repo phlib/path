@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.0.4] - 2019-12-09
 ### Added
 - Add PHP version constraints to Composer config. No BC breaks as the constraint
   covers all current and past versions back to the implicit support for PHP v5.4.
