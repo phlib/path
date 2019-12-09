@@ -294,23 +294,23 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
     private function trimEmptyParts($parts)
     {
         $emptyLeading = empty($parts[0]);
-        $filtered     = [];
 
         if (count($parts) === 1 && $emptyLeading) {
             // empty path (e.g. '')
-            return $filtered;
+            return [];
         }
 
-        foreach ($parts as $index => $part) {
-            if ($index === 0 || // never trim first element to keep leading separators (e.g. '/foo')
-                $index === 1 && $emptyLeading || // never trim second element if first was empty (e.g. '/')
-                !empty($part) // keep non-empty elements
-            ) {
-                $filtered[] = $part;
+        return array_filter($parts, function ($part, $index) use ($emptyLeading) {
+            if ($index === 0) {
+                // never trim first element to keep leading separators (e.g. '/foo')
+                return true;
             }
-        }
-
-        return $filtered;
+            if ($index === 1 && $emptyLeading) {
+                // never trim second element if first was empty (e.g. '/')
+                return true;
+            }
+            return !empty($part);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     /**
