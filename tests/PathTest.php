@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
  */
 class PathTest extends TestCase
 {
-
     public function testCreateFromParts()
     {
         $parts     = ['foo', 'bar/baz', 'taz'];
@@ -31,7 +30,11 @@ class PathTest extends TestCase
         $phpPathInfo   = pathinfo($path);
         $phlibPathInfo = Path::fromString($path)->info();
 
-        $this->assertPathInfoEquals($phpPathInfo, $phlibPathInfo, "Failed asserting path info matched for path '$path'");
+        $this->assertPathInfoEquals(
+            $phpPathInfo,
+            $phlibPathInfo,
+            "Failed asserting path info matched for path '$path'"
+        );
     }
 
     public function matchesPathInfoProvider()
@@ -69,7 +72,7 @@ class PathTest extends TestCase
             'boz/.woz'
         ];
 
-        $parts = array_map(function($part) {
+        $parts = array_map(function ($part) {
             return Path::escapeName($part);
         }, $parts);
 

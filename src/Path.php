@@ -13,11 +13,11 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @see Path::info
      */
-    const INFO_DIRNAME   = 1;
-    const INFO_BASENAME  = 2;
-    const INFO_EXTENSION = 4;
-    const INFO_FILENAME  = 8;
-    const INFO_ALL       = 15;
+    public const INFO_DIRNAME   = 1;
+    public const INFO_BASENAME  = 2;
+    public const INFO_EXTENSION = 4;
+    public const INFO_FILENAME  = 8;
+    public const INFO_ALL       = 15;
 
     /**
      * The separator to use for delimiting parts of the path
@@ -129,13 +129,11 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
             $chr = mb_substr($path, $index, 1);
             if ($escaping) {
                 $escaping = false;
-            } else {
-                if ($chr === '\\') {
-                    $escaping = true;
-                } elseif ($chr === $directorySeparator) {
-                    $out[] = self::unescapeName(mb_substr($path, $lastSep, $index - $lastSep), $directorySeparator);
-                    $lastSep = $index + 1;
-                }
+            } elseif ($chr === '\\') {
+                $escaping = true;
+            } elseif ($chr === $directorySeparator) {
+                $out[] = self::unescapeName(mb_substr($path, $lastSep, $index - $lastSep), $directorySeparator);
+                $lastSep = $index + 1;
             }
             $index++;
         }
@@ -278,7 +276,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     private function escapeParts($parts)
     {
-        return array_map(function($name) {
+        return array_map(function ($name) {
             return self::escapeName($name);
         }, $parts);
     }
