@@ -14,6 +14,8 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $parts     = ['foo', 'bar/baz', 'taz'];
         $phlibPath = new Path($parts);
         $this->assertEquals('foo/bar\\/baz/taz', $phlibPath->toString());
+        // Also test magic `__toString()`
+        $this->assertEquals('foo/bar\\/baz/taz', (string)$phlibPath);
     }
 
     /**
