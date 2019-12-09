@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Method parameter and return types. Implementations may need to be updated if
+  they pass invalid values to Path methods.
 ### Removed
 - **BC break**: Removed support for PHP v7.1 and v7.2 as they are no longer
 [actively supported](https://php.net/supported-versions.php) by the PHP project

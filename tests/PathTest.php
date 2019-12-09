@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PathTest extends TestCase
 {
-    public function testCreateFromParts()
+    public function testCreateFromParts(): void
     {
         $parts     = ['foo', 'bar/baz', 'taz'];
         $phlibPath = new Path($parts);
@@ -25,7 +25,7 @@ class PathTest extends TestCase
      * @dataProvider matchesPathInfoProvider
      * @param string $path
      */
-    public function testMatchesPathInfo($path)
+    public function testMatchesPathInfo(string $path): void
     {
         $phpPathInfo   = pathinfo($path);
         $phlibPathInfo = Path::fromString($path)->info();
@@ -37,7 +37,7 @@ class PathTest extends TestCase
         );
     }
 
-    public function matchesPathInfoProvider()
+    public function matchesPathInfoProvider(): array
     {
         return [
             ['foo'],
@@ -64,7 +64,7 @@ class PathTest extends TestCase
         ];
     }
 
-    public function testEscapingPathSeparators()
+    public function testEscapingPathSeparators(): void
     {
         $parts = [
             'foo/bar',
@@ -85,13 +85,13 @@ class PathTest extends TestCase
      * @param string $path
      * @param int $expectedCount
      */
-    public function testIgnoresEscapedSeparators($path, $expectedCount)
+    public function testIgnoresEscapedSeparators(string $path, int $expectedCount): void
     {
         $phlibPath = Path::fromString($path);
         $this->assertEquals($expectedCount, count($phlibPath), "Failed asserting path count for path '$path'");
     }
 
-    public function ignoresEscapedSeparatorsProvider()
+    public function ignoresEscapedSeparatorsProvider(): array
     {
         return [
             ['foo\\/bar', 1],
@@ -104,7 +104,7 @@ class PathTest extends TestCase
         ];
     }
 
-    public function testPathInfoOption()
+    public function testPathInfoOption(): void
     {
         $path      = 'foo/bar/baz.taz';
         $phlibPath = Path::fromString($path);
@@ -114,7 +114,7 @@ class PathTest extends TestCase
         $this->assertEquals(pathinfo($path, PATHINFO_EXTENSION), $phlibPath->info(Path::INFO_EXTENSION));
     }
 
-    public function testPathInfoMultipleOptions()
+    public function testPathInfoMultipleOptions(): void
     {
         // a little extra behaviour which pathinfo can't handle
         $path      = 'foo/bar/baz.taz';
@@ -129,7 +129,7 @@ class PathTest extends TestCase
         $this->assertPathInfoEquals($expected, $actual);
     }
 
-    public function testPathInfoMultipleOptionsNotAllPresent()
+    public function testPathInfoMultipleOptionsNotAllPresent(): void
     {
         $path = '';
         $phlibPath = Path::fromString($path);
@@ -143,20 +143,20 @@ class PathTest extends TestCase
         $this->assertPathInfoEquals($expected, $actual);
     }
 
-    public function testCountable()
+    public function testCountable(): void
     {
         $phlibPath = Path::fromString('foo/bar/baz.taz');
         $this->assertEquals(3, count($phlibPath));
     }
 
-    public function testOffsetAccess()
+    public function testOffsetAccess(): void
     {
         $phlibPath = Path::fromString('foo/bar/baz.taz');
         $this->assertTrue(isset($phlibPath[1]));
         $this->assertEquals('baz.taz', $phlibPath[2]);
     }
 
-    public function testOffsetsAreImmutable()
+    public function testOffsetsAreImmutable(): void
     {
         $this->expectException(\RuntimeException::class);
 
@@ -164,7 +164,7 @@ class PathTest extends TestCase
         $phlibPath[1] = 'boo';
     }
 
-    public function testOffsetsCannotUnset()
+    public function testOffsetsCannotUnset(): void
     {
         $this->expectException(\RuntimeException::class);
 
@@ -172,7 +172,7 @@ class PathTest extends TestCase
         unset($phlibPath[1]);
     }
 
-    public function testIterable()
+    public function testIterable(): void
     {
         $phlibPath = Path::fromString('foo/bar/baz.taz');
         $out = [];
@@ -182,7 +182,7 @@ class PathTest extends TestCase
         $this->assertEquals('foo::bar::baz.taz', implode('::', $out));
     }
 
-    public function testPartsAreUnescaped()
+    public function testPartsAreUnescaped(): void
     {
         $name = 'my/file';
         $dir  = 'dir';
@@ -193,7 +193,7 @@ class PathTest extends TestCase
         $this->assertEquals($name, $phlibPath[1]);
     }
 
-    public function testToStringReEscapes()
+    public function testToStringReEscapes(): void
     {
         $name = 'my/file';
         $dir  = 'dir';
@@ -203,7 +203,7 @@ class PathTest extends TestCase
         $this->assertEquals($path, $phlibPath->toString());
     }
 
-    public function testDirnamePath()
+    public function testDirnamePath(): void
     {
         $root = 'root';
         $dir  = 'dir';
@@ -217,7 +217,7 @@ class PathTest extends TestCase
         $this->assertEquals($root, $dirPath->info(Path::INFO_DIRNAME));
     }
 
-    public function testSlice()
+    public function testSlice(): void
     {
         $path = 'root/dir/file';
         $phlibPath = Path::fromString($path);
@@ -228,7 +228,7 @@ class PathTest extends TestCase
         $this->assertEquals('root', $phlibPath->slice(0, 1)->toString());
     }
 
-    public function testTrimStart()
+    public function testTrimStart(): void
     {
         $path = '/root/dir/file';
         $phlibPath = Path::fromString($path);
@@ -247,7 +247,7 @@ class PathTest extends TestCase
      * @param array $actual
      * @param string $message
      */
-    private function assertPathInfoEquals($expected, $actual, $message = '')
+    private function assertPathInfoEquals(array $expected, array $actual, string $message = ''): void
     {
         ksort($expected);
         ksort($actual);
