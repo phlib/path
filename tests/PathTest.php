@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phlib;
+
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Phlib\Path
  * @license LGPL-3.0
  */
-class PathTest extends \PHPUnit_Framework_TestCase
+class PathTest extends TestCase
 {
 
     public function testCreateFromParts()
@@ -132,7 +136,7 @@ class PathTest extends \PHPUnit_Framework_TestCase
         ];
         $actual = $phlibPath->info(Path::INFO_FILENAME | Path::INFO_EXTENSION);
 
-        $this->assertInternalType('array', $actual);
+        $this->assertIsArray($actual);
         $this->assertPathInfoEquals($expected, $actual);
     }
 
@@ -149,20 +153,18 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('baz.taz', $phlibPath[2]);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testOffsetsAreImmutable()
     {
+        $this->expectException(\RuntimeException::class);
+
         $phlibPath = Path::fromString('foo/bar/baz.taz');
         $phlibPath[1] = 'boo';
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testOffsetsCannotUnset()
     {
+        $this->expectException(\RuntimeException::class);
+
         $phlibPath = Path::fromString('foo/bar/baz.taz');
         unset($phlibPath[1]);
     }

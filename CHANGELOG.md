@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Removed
+- **BC break**: Removed support for PHP v7.1 and v7.2 as they are no longer
+[actively supported](https://php.net/supported-versions.php) by the PHP project
 
 ## [1.0.4] - 2019-12-09
 ### Added
