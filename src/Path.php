@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phlib;
 
 /**
@@ -13,11 +15,11 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @see Path::info
      */
-    const INFO_DIRNAME   = 1;
-    const INFO_BASENAME  = 2;
-    const INFO_EXTENSION = 4;
-    const INFO_FILENAME  = 8;
-    const INFO_ALL       = 15;
+    public const INFO_DIRNAME   = 1;
+    public const INFO_BASENAME  = 2;
+    public const INFO_EXTENSION = 4;
+    public const INFO_FILENAME  = 8;
+    public const INFO_ALL       = 15;
 
     /**
      * The separator to use for delimiting parts of the path
@@ -63,7 +65,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param string $directorySeparator
      * @return string
      */
-    public static function escapeName($name, $directorySeparator = DIRECTORY_SEPARATOR)
+    public static function escapeName(string $name, string $directorySeparator = DIRECTORY_SEPARATOR): string
     {
         return strtr(
             $name,
@@ -84,7 +86,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param string $directorySeparator
      * @return string
      */
-    public static function unescapeName($name, $directorySeparator = DIRECTORY_SEPARATOR)
+    public static function unescapeName(string $name, string $directorySeparator = DIRECTORY_SEPARATOR): string
     {
         return strtr(
             $name,
@@ -102,7 +104,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param string $directorySeparator
      * @return Path
      */
-    public static function fromString($path, $directorySeparator = DIRECTORY_SEPARATOR)
+    public static function fromString(string $path, string $directorySeparator = DIRECTORY_SEPARATOR): self
     {
         $parts = self::splitPath($path, $directorySeparator);
         return new self($parts, $directorySeparator);
@@ -118,7 +120,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param string $directorySeparator
      * @return array
      */
-    private static function splitPath($path, $directorySeparator)
+    private static function splitPath(string $path, string $directorySeparator): array
     {
         $index    = 0;
         $length   = mb_strlen($path);
@@ -129,13 +131,11 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
             $chr = mb_substr($path, $index, 1);
             if ($escaping) {
                 $escaping = false;
-            } else {
-                if ($chr === '\\') {
-                    $escaping = true;
-                } elseif ($chr === $directorySeparator) {
-                    $out[] = self::unescapeName(mb_substr($path, $lastSep, $index - $lastSep), $directorySeparator);
-                    $lastSep = $index + 1;
-                }
+            } elseif ($chr === '\\') {
+                $escaping = true;
+            } elseif ($chr === $directorySeparator) {
+                $out[] = self::unescapeName(mb_substr($path, $lastSep, $index - $lastSep), $directorySeparator);
+                $lastSep = $index + 1;
             }
             $index++;
         }
@@ -148,7 +148,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param array $parts
      * @param string $directorySeparator
      */
-    public function __construct($parts, $directorySeparator = DIRECTORY_SEPARATOR)
+    public function __construct(array $parts, string $directorySeparator = DIRECTORY_SEPARATOR)
     {
         $parts = $this->trimEmptyParts($parts);
 
@@ -161,7 +161,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return Path
      */
-    public function getDirnamePath()
+    public function getDirnamePath(): self
     {
         return $this->slice(0, -1);
     }
@@ -173,7 +173,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param int= $length
      * @return Path
      */
-    public function slice($offset, $length = null)
+    public function slice(int $offset, int $length = null): self
     {
         $parts = $this->parts;
         $parts = isset($length) ? array_slice($parts, $offset, $length) : array_slice($parts, $offset);
@@ -185,7 +185,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return Path
      */
-    public function trimStart()
+    public function trimStart(): self
     {
         $parts = $this->parts;
         if (count($parts) > 1 && empty($parts[0])) {
@@ -201,7 +201,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return implode($this->directorySeparator, $this->escapeParts($this->parts));
     }
@@ -216,7 +216,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param int $options
      * @return array|string
      */
-    public function info($options = self::INFO_ALL)
+    public function info(int $options = self::INFO_ALL)
     {
         $this->parseInfo();
         $info = [];
@@ -237,7 +237,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @see Path::info
      */
-    private function parseInfo()
+    private function parseInfo(): void
     {
         if (isset($this->info)) {
             return;
@@ -276,9 +276,9 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param array $parts
      * @return array
      */
-    private function escapeParts($parts)
+    private function escapeParts(array $parts): array
     {
-        return array_map(function($name) {
+        return array_map(function ($name) {
             return self::escapeName($name);
         }, $parts);
     }
@@ -291,32 +291,32 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param array $parts
      * @return array
      */
-    private function trimEmptyParts($parts)
+    private function trimEmptyParts(array $parts): array
     {
         $emptyLeading = empty($parts[0]);
-        $filtered     = [];
 
         if (count($parts) === 1 && $emptyLeading) {
             // empty path (e.g. '')
-            return $filtered;
+            return [];
         }
 
-        foreach ($parts as $index => $part) {
-            if ($index === 0 || // never trim first element to keep leading separators (e.g. '/foo')
-                $index === 1 && $emptyLeading || // never trim second element if first was empty (e.g. '/')
-                !empty($part) // keep non-empty elements
-            ) {
-                $filtered[] = $part;
+        return array_filter($parts, function ($part, $index) use ($emptyLeading) {
+            if ($index === 0) {
+                // never trim first element to keep leading separators (e.g. '/foo')
+                return true;
             }
-        }
-
-        return $filtered;
+            if ($index === 1 && $emptyLeading) {
+                // never trim second element if first was empty (e.g. '/')
+                return true;
+            }
+            return !empty($part);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     /**
      * @inheritdoc
      */
-    public function count()
+    public function count(): int
     {
         return count($this->parts);
     }
@@ -324,7 +324,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->parts);
     }
@@ -340,7 +340,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \RuntimeException('Cannot modify parts of the path');
     }
@@ -348,7 +348,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \RuntimeException('Cannot modify parts of the path');
     }
@@ -356,15 +356,12 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->parts);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }
