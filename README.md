@@ -1,9 +1,9 @@
 # phlib/path
 
-[![Build Status](https://img.shields.io/travis/phlib/path/master.svg?style=flat-square)](https://travis-ci.org/phlib/path)
-[![Codecov](https://img.shields.io/codecov/c/github/phlib/path.svg)](https://codecov.io/gh/phlib/path)
-[![Latest Stable Version](https://img.shields.io/packagist/v/phlib/path.svg?style=flat-square)](https://packagist.org/packages/phlib/path)
-[![Total Downloads](https://img.shields.io/packagist/dt/phlib/path.svg?style=flat-square)](https://packagist.org/packages/phlib/path)
+[![Code Checks](https://img.shields.io/github/workflow/status/phlib/path/CodeChecks?logo=github)](https://github.com/phlib/path/actions/workflows/code-checks.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/phlib/path.svg?logo=codecov)](https://codecov.io/gh/phlib/path)
+[![Latest Stable Version](https://img.shields.io/packagist/v/phlib/path.svg?logo=packagist)](https://packagist.org/packages/phlib/path)
+[![Total Downloads](https://img.shields.io/packagist/dt/phlib/path.svg?logo=packagist)](https://packagist.org/packages/phlib/path)
 ![Licence](https://img.shields.io/github/license/phlib/path.svg)
 
 PHP path handling component for dealing with escaped directory separators
