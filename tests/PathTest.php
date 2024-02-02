@@ -14,7 +14,7 @@ class PathTest extends TestCase
 {
     public function testCreateFromParts(): void
     {
-        $parts     = ['foo', 'bar/baz', 'taz'];
+        $parts = ['foo', 'bar/baz', 'taz'];
         $phlibPath = new Path($parts);
         $this->assertEquals('foo/bar\\/baz/taz', $phlibPath->toString());
         // Also test magic `__toString()`
@@ -23,17 +23,16 @@ class PathTest extends TestCase
 
     /**
      * @dataProvider matchesPathInfoProvider
-     * @param string $path
      */
     public function testMatchesPathInfo(string $path): void
     {
-        $phpPathInfo   = pathinfo($path);
+        $phpPathInfo = pathinfo($path);
         $phlibPathInfo = Path::fromString($path)->info();
 
         $this->assertPathInfoEquals(
             $phpPathInfo,
             $phlibPathInfo,
-            "Failed asserting path info matched for path '$path'"
+            "Failed asserting path info matched for path '{$path}'"
         );
     }
 
@@ -69,7 +68,7 @@ class PathTest extends TestCase
         $parts = [
             'foo/bar',
             'baz/taz\\',
-            'boz/.woz'
+            'boz/.woz',
         ];
 
         $parts = array_map(function ($part) {
@@ -82,13 +81,11 @@ class PathTest extends TestCase
 
     /**
      * @dataProvider ignoresEscapedSeparatorsProvider
-     * @param string $path
-     * @param int $expectedCount
      */
     public function testIgnoresEscapedSeparators(string $path, int $expectedCount): void
     {
         $phlibPath = Path::fromString($path);
-        $this->assertEquals($expectedCount, count($phlibPath), "Failed asserting path count for path '$path'");
+        $this->assertEquals($expectedCount, count($phlibPath), "Failed asserting path count for path '{$path}'");
     }
 
     public function ignoresEscapedSeparatorsProvider(): array
@@ -106,7 +103,7 @@ class PathTest extends TestCase
 
     public function testPathInfoOption(): void
     {
-        $path      = 'foo/bar/baz.taz';
+        $path = 'foo/bar/baz.taz';
         $phlibPath = Path::fromString($path);
         $this->assertEquals(pathinfo($path, PATHINFO_BASENAME), $phlibPath->info(Path::INFO_BASENAME));
         $this->assertEquals(pathinfo($path, PATHINFO_DIRNAME), $phlibPath->info(Path::INFO_DIRNAME));
@@ -117,11 +114,11 @@ class PathTest extends TestCase
     public function testPathInfoMultipleOptions(): void
     {
         // a little extra behaviour which pathinfo can't handle
-        $path      = 'foo/bar/baz.taz';
+        $path = 'foo/bar/baz.taz';
         $phlibPath = Path::fromString($path);
 
         $expected = [
-            'filename'  => pathinfo($path, PATHINFO_FILENAME),
+            'filename' => pathinfo($path, PATHINFO_FILENAME),
             'extension' => pathinfo($path, PATHINFO_EXTENSION),
         ];
         $actual = $phlibPath->info(Path::INFO_FILENAME | Path::INFO_EXTENSION);
@@ -185,7 +182,7 @@ class PathTest extends TestCase
     public function testPartsAreUnescaped(): void
     {
         $name = 'my/file';
-        $dir  = 'dir';
+        $dir = 'dir';
         $path = $dir . '/' . Path::escapeName($name);
         $phlibPath = Path::fromString($path);
 
@@ -196,7 +193,7 @@ class PathTest extends TestCase
     public function testToStringReEscapes(): void
     {
         $name = 'my/file';
-        $dir  = 'dir';
+        $dir = 'dir';
         $path = $dir . '/' . Path::escapeName($name);
         $phlibPath = Path::fromString($path);
 
@@ -206,11 +203,11 @@ class PathTest extends TestCase
     public function testDirnamePath(): void
     {
         $root = 'root';
-        $dir  = 'dir';
-        $path = "$root/$dir/file";
+        $dir = 'dir';
+        $path = "{$root}/{$dir}/file";
 
         $phlibPath = Path::fromString($path);
-        $dirPath   = $phlibPath->getDirnamePath();
+        $dirPath = $phlibPath->getDirnamePath();
 
         $this->assertInstanceOf('\Phlib\Path', $dirPath);
         $this->assertEquals($dir, $dirPath->info(Path::INFO_BASENAME));
@@ -242,10 +239,6 @@ class PathTest extends TestCase
 
     /**
      * Helper method for comparing pathinfo arrays
-     *
-     * @param array $expected
-     * @param array $actual
-     * @param string $message
      */
     private function assertPathInfoEquals(array $expected, array $actual, string $message = ''): void
     {

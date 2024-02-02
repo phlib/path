@@ -15,23 +15,27 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @see Path::info
      */
-    public const INFO_DIRNAME   = 1;
-    public const INFO_BASENAME  = 2;
+    public const INFO_DIRNAME = 1;
+
+    public const INFO_BASENAME = 2;
+
     public const INFO_EXTENSION = 4;
-    public const INFO_FILENAME  = 8;
-    public const INFO_ALL       = 15;
+
+    public const INFO_FILENAME = 8;
+
+    public const INFO_ALL = 15;
 
     /**
      * The separator to use for delimiting parts of the path
      *
-     * @var string $directorySeparator
+     * @var string
      */
     private $directorySeparator;
 
     /**
      * The parts of the path
      *
-     * @var string[] $parts
+     * @var string[]
      */
     private $parts;
 
@@ -47,31 +51,27 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * Mapping of info keys to the key names used in the output
      *
      * @see Path::info
-     * @var array $infoKeys
+     * @var array
      */
     private $infoKeys = [
-        self::INFO_DIRNAME   => 'dirname',
-        self::INFO_BASENAME  => 'basename',
+        self::INFO_DIRNAME => 'dirname',
+        self::INFO_BASENAME => 'basename',
         self::INFO_EXTENSION => 'extension',
-        self::INFO_FILENAME  => 'filename',
+        self::INFO_FILENAME => 'filename',
     ];
 
     /**
      * Escape any directory separators which appear in a name (part of a path)
      *
      * This also escapes the escape character, to ensure that the escape character is still usable
-     *
-     * @param string $name
-     * @param string $directorySeparator
-     * @return string
      */
     public static function escapeName(string $name, string $directorySeparator = DIRECTORY_SEPARATOR): string
     {
         return strtr(
             $name,
             [
-                '\\'                => '\\\\',                  // escape the escape character
-                $directorySeparator  => "\\$directorySeparator",  // escape the separator
+                '\\' => '\\\\', // escape the escape character
+                $directorySeparator => "\\{$directorySeparator}", // escape the separator
             ]
         );
     }
@@ -81,28 +81,20 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * This generally shouldn't be needed outside of this class, as asking for a particular part of a path
      * from an instance of this class should return the unescaped name
-     *
-     * @param string $name
-     * @param string $directorySeparator
-     * @return string
      */
     public static function unescapeName(string $name, string $directorySeparator = DIRECTORY_SEPARATOR): string
     {
         return strtr(
             $name,
             [
-                '\\\\'                  => '\\',
-                "\\$directorySeparator" => "$directorySeparator",
+                '\\\\' => '\\',
+                "\\{$directorySeparator}" => "{$directorySeparator}",
             ]
         );
     }
 
     /**
      * Create a new path instance from a string path
-     *
-     * @param string $path
-     * @param string $directorySeparator
-     * @return Path
      */
     public static function fromString(string $path, string $directorySeparator = DIRECTORY_SEPARATOR): self
     {
@@ -115,18 +107,14 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * This method could be as simple as an explode, were it not for needing to account for escaped
      * directory separators.
-     *
-     * @param string $path
-     * @param string $directorySeparator
-     * @return array
      */
     private static function splitPath(string $path, string $directorySeparator): array
     {
-        $index    = 0;
-        $length   = mb_strlen($path);
+        $index = 0;
+        $length = mb_strlen($path);
         $escaping = false;
-        $out      = [];
-        $lastSep  = 0;
+        $out = [];
+        $lastSep = 0;
         while ($index < $length) {
             $chr = mb_substr($path, $index, 1);
             if ($escaping) {
@@ -143,23 +131,16 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         return $out;
     }
 
-    /**
-     * Path constructor
-     * @param array $parts
-     * @param string $directorySeparator
-     */
     public function __construct(array $parts, string $directorySeparator = DIRECTORY_SEPARATOR)
     {
         $parts = $this->trimEmptyParts($parts);
 
         $this->directorySeparator = $directorySeparator;
-        $this->parts              = $parts;
+        $this->parts = $parts;
     }
 
     /**
      * Get a new path instance for everything up to the parent directory
-     *
-     * @return Path
      */
     public function getDirnamePath(): self
     {
@@ -168,10 +149,6 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * Get a new path instance for a slice of the path (arguments should match array_slice)
-     *
-     * @param int $offset
-     * @param int= $length
-     * @return Path
      */
     public function slice(int $offset, int $length = null): self
     {
@@ -182,8 +159,6 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * Get a new path instance with any empty start part removed
-     *
-     * @return Path
      */
     public function trimStart(): self
     {
@@ -198,8 +173,6 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * Get a string representation of the path
      *
      * This will return the path with directory separators escaped for any part which contains them
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -213,7 +186,6 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * pathinfo for any given path
      *
      * @see pathinfo
-     * @param int $options
      * @return array|string
      */
     public function info(int $options = self::INFO_ALL)
@@ -242,8 +214,8 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         if (isset($this->info)) {
             return;
         }
-        $this->info  = [];
-        $parts       = $this->parts;
+        $this->info = [];
+        $parts = $this->parts;
         if (empty($parts)) {
             $this->info = [
                 self::INFO_BASENAME => '',
@@ -251,7 +223,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
             ];
             return;
         }
-        $basename    = array_pop($parts);
+        $basename = array_pop($parts);
 
         $this->info[self::INFO_BASENAME] = $basename;
         if (empty($parts)) {
@@ -263,18 +235,15 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         if (($dotPos = strrpos($basename, '.')) !== false) {
-            $this->info[self::INFO_FILENAME]  = substr($basename, 0, $dotPos);
+            $this->info[self::INFO_FILENAME] = substr($basename, 0, $dotPos);
             $this->info[self::INFO_EXTENSION] = substr($basename, $dotPos + 1);
         } else {
-            $this->info[self::INFO_FILENAME]  = $basename;
+            $this->info[self::INFO_FILENAME] = $basename;
         }
     }
 
     /**
      * Escapes each part in the given parts array to escape directory separators and returns the resulting array
-     *
-     * @param array $parts
-     * @return array
      */
     private function escapeParts(array $parts): array
     {
@@ -287,9 +256,6 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * Trims the empty elements from the parts array
      *
      * This has special behaviour to deal with empty paths, and paths which contain only a separator
-     *
-     * @param array $parts
-     * @return array
      */
     private function trimEmptyParts(array $parts): array
     {
@@ -313,49 +279,31 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function count(): int
     {
         return count($this->parts);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->parts);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function offsetGet($offset)
     {
         return $this->parts[$offset];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function offsetSet($offset, $value): void
     {
         throw new \RuntimeException('Cannot modify parts of the path');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function offsetUnset($offset): void
     {
         throw new \RuntimeException('Cannot modify parts of the path');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->parts);
