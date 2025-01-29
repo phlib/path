@@ -16,20 +16,21 @@
             "Phlib\\": "src"
         }
     },
-
     "require": {
         "php": "^7.3 || ^8",
         "ext-mbstring": "*"
     },
-
     "require-dev": {
         "phpunit/phpunit": "^9",
         "symplify/easy-coding-standard": "^12"
     },
-
     "autoload-dev": {
         "psr-4": {
             "Phlib\\": "tests"
         }
+    },
+    "scripts": {
+        "check-cs": "vendor/bin/ecs check --ansi",
+        "fix-cs": "vendor/bin/ecs check --fix --ansi"
     }
 }
