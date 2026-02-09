@@ -8,7 +8,7 @@ namespace Phlib;
  * @package Phlib\Path
  * @license LGPL-3.0
  */
-class Path implements \ArrayAccess, \Countable, \IteratorAggregate
+class Path implements \ArrayAccess, \Countable, \IteratorAggregate, \Stringable
 {
     /**
      * Constants for info keys, used for asking for info with the info method
@@ -26,18 +26,11 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
     public const INFO_ALL = 15;
 
     /**
-     * The separator to use for delimiting parts of the path
-     *
-     * @var string
-     */
-    private $directorySeparator;
-
-    /**
      * The parts of the path
      *
      * @var string[]
      */
-    private $parts;
+    private array $parts;
 
     /**
      * Array containing the info properties of the path
@@ -51,9 +44,8 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * Mapping of info keys to the key names used in the output
      *
      * @see Path::info
-     * @var array
      */
-    private $infoKeys = [
+    private array $infoKeys = [
         self::INFO_DIRNAME => 'dirname',
         self::INFO_BASENAME => 'basename',
         self::INFO_EXTENSION => 'extension',
@@ -131,11 +123,11 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         return $out;
     }
 
-    public function __construct(array $parts, string $directorySeparator = DIRECTORY_SEPARATOR)
-    {
+    public function __construct(
+        array $parts,
+        private readonly string $directorySeparator = DIRECTORY_SEPARATOR,
+    ) {
         $parts = $this->trimEmptyParts($parts);
-
-        $this->directorySeparator = $directorySeparator;
         $this->parts = $parts;
     }
 
@@ -188,6 +180,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      * @see pathinfo
      * @return array|string
      */
+    #[\ReturnTypeWillChange]
     public function info(int $options = self::INFO_ALL)
     {
         $this->parseInfo();
@@ -247,7 +240,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     private function escapeParts(array $parts): array
     {
-        return array_map(function ($name) {
+        return array_map(function (string $name): string {
             return self::escapeName($name);
         }, $parts);
     }
@@ -266,7 +259,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
             return [];
         }
 
-        return array_filter($parts, function ($part, $index) use ($emptyLeading) {
+        return array_filter($parts, function ($part, $index) use ($emptyLeading): bool {
             if ($index === 0) {
                 // never trim first element to keep leading separators (e.g. '/foo')
                 return true;
@@ -289,6 +282,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate
         return array_key_exists($offset, $this->parts);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->parts[$offset];

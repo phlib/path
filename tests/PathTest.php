@@ -71,7 +71,7 @@ class PathTest extends TestCase
             'boz/.woz',
         ];
 
-        $parts = array_map(function ($part) {
+        $parts = array_map(function (string $part): string {
             return Path::escapeName($part);
         }, $parts);
 
@@ -209,7 +209,6 @@ class PathTest extends TestCase
         $phlibPath = Path::fromString($path);
         $dirPath = $phlibPath->getDirnamePath();
 
-        $this->assertInstanceOf('\Phlib\Path', $dirPath);
         $this->assertEquals($dir, $dirPath->info(Path::INFO_BASENAME));
         $this->assertEquals($root, $dirPath->info(Path::INFO_DIRNAME));
     }
@@ -232,7 +231,6 @@ class PathTest extends TestCase
 
         $trimmed = $phlibPath->trimStart();
 
-        $this->assertInstanceOf('\Phlib\Path', $trimmed);
         $this->assertEquals('root/dir/file', $trimmed->toString());
         $this->assertEquals(3, $trimmed->count());
     }
