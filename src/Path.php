@@ -64,7 +64,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate, \Stringable
             [
                 '\\' => '\\\\', // escape the escape character
                 $directorySeparator => "\\{$directorySeparator}", // escape the separator
-            ]
+            ],
         );
     }
 
@@ -81,7 +81,7 @@ class Path implements \ArrayAccess, \Countable, \IteratorAggregate, \Stringable
             [
                 '\\\\' => '\\',
                 "\\{$directorySeparator}" => "{$directorySeparator}",
-            ]
+            ],
         );
     }
 

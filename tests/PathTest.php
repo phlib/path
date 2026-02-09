@@ -32,7 +32,7 @@ class PathTest extends TestCase
         $this->assertPathInfoEquals(
             $phpPathInfo,
             $phlibPathInfo,
-            "Failed asserting path info matched for path '{$path}'"
+            "Failed asserting path info matched for path '{$path}'",
         );
     }
 
